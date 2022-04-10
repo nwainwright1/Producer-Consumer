@@ -74,19 +74,19 @@ int main(){
     int c[5] = {1,2,3,4,5};
 
     for(int i=0; i<5; ++i){
-        pthread_create(&con[i], NULL, (void *)consumer, (void *)&c[i]);
+        pthread_create(&pro[i], NULL, (void *)consumer, (void *)&c[i]);
     }
 
     for(int i=0; i<5; ++i){
-        pthread_create(&pro[i], NULL, (void *)consumer, (void *)&c[i]);
+        pthread_create(&con[i], NULL, (void *)consumer, (void *)&c[i]);
+    }
+
+    for(int i = 0; i<5; ++i){
+        pthread_join(pro[i], NULL);
     }
 
     for(int i = 0; i<5; ++i){
         pthread_join(con[i], NULL);
-    }
-
-        for(int i = 0; i<5; ++i){
-        pthread_join(pro[i], NULL);
     }
 
     pthread_mutex_destroy(&mutex);
