@@ -40,9 +40,31 @@ void *consumer(void *con){
 
 }
 
+void *producer(void *pro){
+    
+    for(int i = 0; i<Items; ++i){
+    
+        int prod = rand();
+    
+        sem_wait(&empty);
+
+        pthread_mutex_lock(&mutex);
+    
+        buffer[in] = prod;
+
+        printf("Producer %d: Insert Item %d at %d\n", *((int *)pro),buffer[in],in);
+
+        in = (in+1)%bSize;
+    
+        pthread_mutex_unlock(&mutex);
+
+        sem_post(&full);
+    }
+}
+
 int main(){
 
-    pthread_t con[5];
+    pthread_t con[5],pro[5];
     pthread_mutex_init(&mutex, NULL);
 
     sem_init(&empty, 0, bSize);
@@ -55,8 +77,16 @@ int main(){
         pthread_create(&con[i], NULL, (void *)consumer, (void *)&c[i]);
     }
 
+    for(int i=0; i<5; ++i){
+        pthread_create(&pro[i], NULL, (void *)consumer, (void *)&c[i]);
+    }
+
     for(int i = 0; i<5; ++i){
         pthread_join(con[i], NULL);
+    }
+
+        for(int i = 0; i<5; ++i){
+        pthread_join(pro[i], NULL);
     }
 
     pthread_mutex_destroy(&mutex);
