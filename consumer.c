@@ -74,7 +74,7 @@ int main(){
     int c[5] = {1,2,3,4,5};
 
     for(int i=0; i<5; ++i){
-        pthread_create(&pro[i], NULL, (void *)consumer, (void *)&c[i]);
+        pthread_create(&pro[i], NULL, (void *)producer, (void *)&c[i]);
     }
 
     for(int i=0; i<5; ++i){
